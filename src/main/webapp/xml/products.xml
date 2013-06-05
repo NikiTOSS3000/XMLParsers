@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<products xmlns="http://www.epam.com/products"
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+          xsi:schemaLocation="http://www.epam.com/products products.xsd">
+    <category name="venicle">
+        <subcategory name="cars">
+            <product name="BMW">
+                <producer>Germany</producer>
+                <model>ss111</model>
+                <date>24-09-2002</date>
+                <color>red</color>
+                <instock>false</instock>
+            </product>
+            <product name="Mercedes">
+                <producer>Germany</producer>
+                <model>sl666</model>
+                <date>10-02-1991</date>
+                <color>red</color>
+                <price>32000</price>
+            </product>
+        </subcategory>
+        <subcategory name="jeep">
+            <product name="Mercedes">
+                <producer>Germany</producer>
+                <model>sl666</model>
+                <date>10-02-1991</date>
+                <color>red</color>
+                <price>32000</price>
+            </product>
+        </subcategory>
+    </category>
+    <category name="pens">
+        <subcategory name="roll">
+            <product name="SuperPen">
+                <producer>Russia</producer>
+                <model>sS123</model>
+                <date>12-09-2013</date>
+                <color>white</color>
+                <price>100</price>
+            </product>
+        </subcategory>
+        <subcategory name="gel">
+            <product name="Gelic">
+                <producer>England</producer>
+                <model>AA101</model>
+                <date>12-05-2001</date>
+                <color>blue</color>
+                <price>200</price>
+            </product>
+        </subcategory>
+    </category>
+</products> 

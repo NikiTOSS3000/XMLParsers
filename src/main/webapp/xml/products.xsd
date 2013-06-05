@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.epam.com/products"
+        xmlns:tns="http://www.epam.com/products" elementFormDefault="qualified">
+    <element name="products">
+        <complexType>
+            <sequence>
+                <element name="category" type="tns:category" maxOccurs="unbounded" 
+                         minOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <complexType name="category">
+        <sequence>
+            <element name="subcategory" type="tns:subcategory" maxOccurs="unbounded" 
+                     minOccurs="1"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+    </complexType>
+    
+    <complexType name="subcategory">
+        <sequence>
+            <element name="product" type="tns:product" maxOccurs="unbounded" 
+                     minOccurs="1"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+    </complexType>
+    
+    <complexType name="product">
+        <sequence>
+            <element name="producer" type="string"/>
+            <element name="model" type="tns:model"/>
+            <element name="date" type="tns:date"/>
+            <element name="color" type="string"/>
+            <choice>
+                <element name="price" type="integer"/>
+                <element name="instock" type="boolean" default="true"/>
+            </choice>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+    </complexType>
+    
+    <simpleType name="model">
+        <restriction base="string">
+            <pattern value="[a-zA-Z]{2}\d{3}"></pattern>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="date">
+        <restriction base="string">
+            <pattern value="(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-[12][0-9][0-9][0-9]"></pattern>
+        </restriction>
+    </simpleType>
+</schema>
