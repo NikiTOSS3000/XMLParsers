@@ -13,8 +13,7 @@ public final class CommandFactory {private static CommandFactory instance = null
         commands.put("XSLT", new XSLTCommand());
     }
 
-    public ICommand getCommand(HttpServletRequest request) {
-        String action = request.getParameter("command");
+    public ICommand getCommand(String action) {
         ICommand command = commands.get(action);
         if (command == null) {
             command = new NoCommand();

@@ -1,15 +1,11 @@
 package com.epam.xml.xsl;
 
-import com.epam.xml.controller.XMLServlet;
-import com.epam.xml.resources.Constants;
-import com.epam.xml.util.ConfigurationManager;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -20,19 +16,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 
-public final class ProductsTransformerService {
-    private final static Logger logger = Logger.getLogger("com.epam.xml.xsl");
+public final class TransformerService {
+    private final static Logger logger = Logger.getLogger(TransformerService.class);
     private final HashMap<String, Templates> templates = new HashMap<String, Templates>();
     private final TransformerFactory factory = TransformerFactory.newInstance();
-    private static ProductsTransformerService instance = null;
+    private static TransformerService instance = null;
     
-    private ProductsTransformerService() {
-        String path = XMLServlet.getPath();
-        addTemplate(Constants.PRODUCTS, path + ConfigurationManager.getStr("PRODUCTS_XSL"));
-        addTemplate(Constants.CATEGORY, path + ConfigurationManager.getStr("CATEGORY_XSL"));
-        addTemplate(Constants.SUBCATEGORY, path + ConfigurationManager.getStr("SUBCATEGORY_XSL"));
-        addTemplate(Constants.ADD, path + ConfigurationManager.getStr("ADD_XSL"));
-        addTemplate(Constants.SAVE, path + ConfigurationManager.getStr("SAVE_XSL"));
+    private TransformerService() {
     }
     
     public void addTemplate(String key, String xsl) {
@@ -55,8 +45,9 @@ public final class ProductsTransformerService {
         return transformer;
     }
     
-    public String transform(String file, String xsl, Map<String, Object> param) throws TransformerException {
-        Transformer transformer = instance.getTransformer(xsl);
+    public String transform(String xmlPath, String xslKey, String xslPath, Map<String, Object> param) throws TransformerException {
+        addTemplate(xslKey, xslPath);
+        Transformer transformer = instance.getTransformer(xslKey);
         StringWriter writer = new StringWriter();
         if (param != null) {
             Set<String> keySet = param.keySet();
@@ -64,13 +55,13 @@ public final class ProductsTransformerService {
                 transformer.setParameter(key, param.get(key));
             }
         }
-        transformer.transform(instance.getSource(file), new StreamResult(writer));
+        transformer.transform(instance.getSource(xmlPath), new StreamResult(writer));
         return writer.toString();
     }
     
-    public static ProductsTransformerService getInstance() {
+    public static TransformerService getInstance() {
         if (instance == null) {
-            instance = new ProductsTransformerService();
+            instance = new TransformerService();
         }
         return instance;
     }

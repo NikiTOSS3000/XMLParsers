@@ -4,7 +4,7 @@ import com.epam.xml.controller.XMLServlet;
 import com.epam.xml.resources.Constants;
 import com.epam.xml.util.ConfigurationManager;
 import com.epam.xml.xsl.ProductValidator;
-import com.epam.xml.xsl.ProductsTransformerService;
+import com.epam.xml.xsl.TransformerService;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public final class XSLTCommand implements ICommand {
 
     private static Logger logger = Logger.getLogger("com.epam.xml.command");
-    private final ProductsTransformerService xslService = ProductsTransformerService.getInstance();
+    private final TransformerService xslService = TransformerService.getInstance();
     private final static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final String CATEGORY_NAME = "categoryName";
     private final String SUBCATEGORY_NAME = "subcategoryName";
@@ -33,15 +33,18 @@ public final class XSLTCommand implements ICommand {
         String subcommand = request.getParameter(SUBCOMMAND);
         ProductValidator.reset();
         String xsl = Constants.PRODUCTS;
+        String xslPath = directory + ConfigurationManager.getStr("PRODUCTS_XSL");
         HashMap<String, Object> param = null;
         if (Constants.ADD.equals(subcommand)) {
             xsl = Constants.ADD;
+            xslPath = directory + ConfigurationManager.getStr("ADD_XSL");
             param = new HashMap<String, Object>();
             param.put(CATEGORY_NAME, category);
             param.put(SUBCATEGORY_NAME, subcategory);
         } else if (Constants.SAVE.equals(subcommand)) {
             param = new HashMap<String, Object>();
-            xsl = addProduct(xml, param, request, response);
+            xslPath = directory + ConfigurationManager.getStr("SAVE_XSL");
+            xsl = addProduct(xml, xslPath, param, request, response);
             if (Constants.SUBCATEGORY.equals(xsl)) {
                 String s = "controller?" + request.getQueryString().replaceAll("&" + SUBCOMMAND + ".+", "");
                 sendRedirect(s, response);
@@ -50,6 +53,7 @@ public final class XSLTCommand implements ICommand {
             }
         } else if (Constants.CANCEL.equals(subcommand)) {
             xsl = Constants.SUBCATEGORY;
+            xslPath = directory + ConfigurationManager.getStr("SUBCATEGORY_XSL");
             param = new HashMap<String, Object>();
             param.put(CATEGORY_NAME, category);
             param.put(SUBCATEGORY_NAME, subcategory);
@@ -57,9 +61,11 @@ public final class XSLTCommand implements ICommand {
             if (Constants.BACK.equals(subcommand)) {
                 param = new HashMap<String, Object>();
                 xsl = Constants.CATEGORY;
+                xslPath = directory + ConfigurationManager.getStr("CATEGORY_XSL");
                 param.put(CATEGORY_NAME, category);
             } else {
                 xsl = Constants.SUBCATEGORY;
+                xslPath = directory + ConfigurationManager.getStr("SUBCATEGORY_XSL");
                 param = new HashMap<String, Object>();
                 param.put(CATEGORY_NAME, category);
                 param.put(SUBCATEGORY_NAME, subcategory);
@@ -68,13 +74,14 @@ public final class XSLTCommand implements ICommand {
             if (!Constants.BACK.equals(subcommand)) {
                 param = new HashMap<String, Object>();
                 xsl = Constants.CATEGORY;
+                xslPath = directory + ConfigurationManager.getStr("CATEGORY_XSL");
                 param.put(CATEGORY_NAME, category);
             }
         } else if (Constants.BACK.equals(subcommand)) {
             return ConfigurationManager.getStr("INDEX_PAGE_PATH");
         }
         lock.readLock().lock();
-        String transformedResponse = getTransformedResponse(xml, xsl, param);
+        String transformedResponse = getTransformedResponse(xml, xsl, xslPath, param);
         lock.readLock().unlock();
         if (writeResponse(transformedResponse, response)) {
             return null;
@@ -82,7 +89,7 @@ public final class XSLTCommand implements ICommand {
         return null;
     }
 
-    private String addProduct(String xml, HashMap<String, Object> param, HttpServletRequest request, HttpServletResponse response) {
+    private String addProduct(String xml, String xslPath, HashMap<String, Object> param, HttpServletRequest request, HttpServletResponse response) {
         String xsl = Constants.SAVE;
         param.put(CATEGORY_NAME, request.getParameter(Constants.CATEGORY));
         param.put(SUBCATEGORY_NAME, request.getParameter(Constants.SUBCATEGORY));
@@ -99,7 +106,7 @@ public final class XSLTCommand implements ICommand {
             param.put(Constants.INSTOCK, "false");
         }
         lock.readLock().lock();
-        String transformedResponse = getTransformedResponse(xml, xsl, param);
+        String transformedResponse = getTransformedResponse(xml, xsl, xslPath, param);
         lock.readLock().unlock();
         if (!ProductValidator.isValid()) {
             writeResponse(transformedResponse, response);
@@ -113,10 +120,10 @@ public final class XSLTCommand implements ICommand {
         return xsl;
     }
 
-    private String getTransformedResponse(String xml, String xsl, HashMap<String, Object> param) {
+    private String getTransformedResponse(String xml, String xsl, String xslPath, HashMap<String, Object> param) {
         String s = null;
         try {
-            s = xslService.transform(xml, xsl, param);
+            s = xslService.transform(xml, xsl, xslPath, param);
         } catch (TransformerException ex) {
             logger.error(ex);
         }

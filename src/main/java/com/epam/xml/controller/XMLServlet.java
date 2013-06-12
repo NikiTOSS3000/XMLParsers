@@ -30,7 +30,8 @@ public final class XMLServlet extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = CommandFactory.getInstance().getCommand(req).execute(req, resp);
+        String command = req.getParameter("command");
+        String page = CommandFactory.getInstance().getCommand(command).execute(req, resp);
         if (page != null) {
             req.getRequestDispatcher(page).forward(req, resp);
         }
