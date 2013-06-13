@@ -15,6 +15,7 @@
     <xsl:param name="date"/>
     <xsl:param name="price"/>
     <xsl:param name="instock"/>
+    <xsl:param name="validator"/>
     
     <xsl:template match="/" name="addXsl">
         <xsl:param name="errorMsg" />
@@ -29,7 +30,7 @@
                     </dt>
                     <dd>
                         <input type="text" id="name" name="name" value="{$name}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getNameError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getNameError($validator)" /></span>
                     </dd>
                     <dt>
                         <label for="producer">
@@ -37,7 +38,7 @@
                     </dt>
                     <dd>
                         <input id="producer" type="text" name="producer" value="{$producer}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getProducerError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getProducerError($validator)" /></span>
                     </dd>
                     <dt>
                         <label for="model">
@@ -45,7 +46,7 @@
                     </dt>
                     <dd>
                         <input id="model" type="text" name="model" value="{$model}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getModelError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getModelError($validator)" /></span>
                     </dd>
 
                     <dt>
@@ -54,7 +55,7 @@
                     </dt>
                     <dd>
                         <input type="text" id="date" name="date" value="{$date}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getDateError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getDateError($validator)" /></span>
                     </dd>
 
                     <dt>
@@ -63,14 +64,14 @@
                     </dt>
                     <dd>
                         <input type="text" id="color" name="color" value="{$color}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getColorError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getColorError($validator)" /></span>
                     </dd>
                     <dt>
                         <label for="instock">
                             In Stock</label>
                     </dt>
                     <dd>
-                        <input type="checkbox" id="instock" name="instock">
+                        <input type="checkbox"  id="instock" name="instock" checked="">
                             <xsl:if test="$instock='true'">
                                 <xsl:attribute name="checked">yes</xsl:attribute>
                             </xsl:if>
@@ -83,7 +84,7 @@
                     </dt>
                     <dd>
                         <input id="price" type="text" name="price" value="{$price}"/>
-                        <span style = "color:red"><xsl:value-of select="validation:getPriceError()" /></span>
+                        <span style = "color:red"><xsl:value-of select="validation:getPriceError($validator)" /></span>
                     </dd>
                 </dl>
                 <input type="hidden" name="command" value="XSLT"/>

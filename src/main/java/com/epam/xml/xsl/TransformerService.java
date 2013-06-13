@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -18,11 +19,20 @@ import org.apache.log4j.Logger;
 
 public final class TransformerService {
     private final static Logger logger = Logger.getLogger(TransformerService.class);
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final HashMap<String, Templates> templates = new HashMap<String, Templates>();
     private final TransformerFactory factory = TransformerFactory.newInstance();
     private static TransformerService instance = null;
     
     private TransformerService() {
+    }
+    
+    public ReentrantReadWriteLock.ReadLock getReadLock() {
+        return lock.readLock();
+    }
+    
+    public ReentrantReadWriteLock.WriteLock getWriteLock() {
+        return lock.writeLock();
     }
     
     public void addTemplate(String key, String xsl) {
@@ -57,6 +67,16 @@ public final class TransformerService {
         }
         transformer.transform(instance.getSource(xmlPath), new StreamResult(writer));
         return writer.toString();
+    }
+    
+    public String getTransformedResponse(String xml, String xsl, String xslPath, HashMap<String, Object> param) {
+        String s = null;
+        try {
+            s = transform(xml, xsl, xslPath, param);
+        } catch (TransformerException ex) {
+            logger.error(ex);
+        }
+        return s;
     }
     
     public static TransformerService getInstance() {

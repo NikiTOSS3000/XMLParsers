@@ -6,31 +6,22 @@ import java.text.SimpleDateFormat;
 
 public final class ProductValidator {
 
-    private static String nameError = "";
-    private static String producerError = "";
-    private static String colorError = "";
-    private static String modelError = "";
-    private static String priceError = "";
-    private static String dateError = "";
+    private String nameError = "";
+    private String producerError = "";
+    private String colorError = "";
+    private String modelError = "";
+    private String priceError = "";
+    private String dateError = "";
 
-    public static void reset() {
-        nameError = "";
-        producerError = "";
-        colorError = "";
-        modelError = "";
-        priceError = "";
-        dateError = "";
-    }
-
-    public static boolean isValid() {
-        if ("".equals(nameError) && "".equals(producerError) && "".equals(colorError)
-                && "".equals(modelError) && "".equals(priceError) && "".equals(dateError)) {
+    public boolean isValid() {
+        if (nameError.isEmpty() && producerError.isEmpty() && colorError.isEmpty()
+                && modelError.isEmpty() && priceError.isEmpty() && dateError.isEmpty()) {
             return true;
         }
         return false;
     }
 
-    public static boolean name(String s) {
+    public boolean name(String s) {
         nameError = "";
         if (s == null || "".equals(s)) {
             nameError = "Name is absent";
@@ -38,7 +29,7 @@ public final class ProductValidator {
         return exists(s);
     }
 
-    public static boolean color(String s) {
+    public boolean color(String s) {
         colorError = "";
         if (s == null || "".equals(s)) {
             colorError = "Color is absent";
@@ -46,7 +37,7 @@ public final class ProductValidator {
         return exists(s);
     }
 
-    public static boolean producer(String s) {
+    public boolean producer(String s) {
         producerError = "";
         if (s == null || "".equals(s)) {
             producerError = "Producer is absent";
@@ -54,11 +45,11 @@ public final class ProductValidator {
         return exists(s);
     }
 
-    public static boolean exists(String s) {
+    public boolean exists(String s) {
         return s != null && !"".equals(s);
     }
 
-    public static boolean date(String s) {
+    public boolean date(String s) {
         dateError = "";
         SimpleDateFormat formatter = new SimpleDateFormat(ConfigurationManager.getStr("date.format"));
         try {
@@ -70,7 +61,7 @@ public final class ProductValidator {
         return true;
     }
 
-    public static boolean model(String s) {
+    public boolean model(String s) {
         modelError = "";
         boolean b = s.matches(ConfigurationManager.getStr("model.format"));
         if (!b) {
@@ -79,7 +70,7 @@ public final class ProductValidator {
         return b;
     }
 
-    public static boolean price(String s, String inStock) {
+    public boolean price(String s, String inStock) {
         priceError = "";
         int i = 0;
         boolean in = Boolean.parseBoolean(inStock);
@@ -97,30 +88,30 @@ public final class ProductValidator {
         return i > 0 && in;
     }
 
-    private ProductValidator() {
+    public ProductValidator() {
     }
 
-    public static String getNameError() {
+    public String getNameError() {
         return nameError;
     }
 
-    public static String getProducerError() {
+    public String getProducerError() {
         return producerError;
     }
 
-    public static String getColorError() {
+    public String getColorError() {
         return colorError;
     }
 
-    public static String getModelError() {
+    public String getModelError() {
         return modelError;
     }
 
-    public static String getPriceError() {
+    public String getPriceError() {
         return priceError;
     }
 
-    public static String getDateError() {
+    public String getDateError() {
         return dateError;
     }
 }

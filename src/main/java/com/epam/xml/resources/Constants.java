@@ -1,6 +1,7 @@
 package com.epam.xml.resources;
 
 public final class Constants {
+
     public static final String PRODUCTS = "products";
     public static final String CATEGORY = "category";
     public static final String SUBCATEGORY = "subcategory";
@@ -16,6 +17,11 @@ public final class Constants {
     public static final String SAVE = "save";
     public static final String CANCEL = "cancel";
     public static final String BACK = "back";
-    
-    private Constants() {}
+    public static final String CATEGORY_NAME = "categoryName";
+    public static final String SUBCATEGORY_NAME = "subcategoryName";
+    public static final String SUBCOMMAND = "subcommand";
+    public static final String VALIDATOR = "validator";
+
+    private Constants() {
+    }
 }

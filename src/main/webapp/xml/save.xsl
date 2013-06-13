@@ -17,27 +17,27 @@
     <xsl:param name="date"/>
     <xsl:param name="price"/>
     <xsl:param name="instock"/>
-    <xsl:param name="test" select="0"/>
+    <xsl:param name="validator"/>
     
     <xsl:template match="/">
         <xsl:variable name="error">
-            <xsl:if test="validation:name($name) = false">
-					&lt;br/> Name is absent
+            <xsl:if test="validation:name($validator, $name) = false">
+		error found;
             </xsl:if>
-            <xsl:if test="validation:producer($producer)=false">
-					&lt;br/> Producer is not specified
+            <xsl:if test="validation:producer($validator,$producer)=false">
+		error found;
             </xsl:if>
-            <xsl:if test="validation:color($color)=false">
-					&lt;br/> Color is not specified
+            <xsl:if test="validation:color($validator,$color)=false">
+		error found;
             </xsl:if>
-            <xsl:if test="validation:model($model)=false">
-					&lt;br/> Model is incorrect
+            <xsl:if test="validation:model($validator,$model)=false">
+		error found;
             </xsl:if>
-            <xsl:if test="validation:date($date)=false">
-					&lt;br/> Date is incorrect
+            <xsl:if test="validation:date($validator,$date)=false">
+		error found;
             </xsl:if>
-            <xsl:if test="validation:price($price, $instock)=false">
-					&lt;br/> Price and stock information are invalid
+            <xsl:if test="validation:price($validator,$price, $instock)=false">
+		error found;
             </xsl:if>
         </xsl:variable>
         <xsl:choose>
@@ -46,6 +46,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="addXsl">
+                    <xsl:with-param name="validator" select="$validator"/>
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>

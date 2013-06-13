@@ -8,4 +8,6 @@ public final class ConfigurationManager {
     public static String getStr(String key) {
         return resource.getString(key);
     }
+    
+    private ConfigurationManager(){}
 }

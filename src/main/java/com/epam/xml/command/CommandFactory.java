@@ -11,6 +11,10 @@ public final class CommandFactory {private static CommandFactory instance = null
         commands.put("SAX", new SAXParseCommand());
         commands.put("StAX", new StAXParseCommand());
         commands.put("XSLT", new XSLTCommand());
+        commands.put("save", new SaveCommand());
+        commands.put("add", new AddCommand());
+        commands.put("back", new BackCommand());
+        commands.put("cancel", new CancelCommand());
     }
 
     public ICommand getCommand(String action) {
